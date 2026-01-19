@@ -29,7 +29,7 @@ struct StatusResponsePlayer {
     name: String,
 }
 
-pub fn ping() -> Result<Vec<String>, Error> {
+pub fn minecraft_ping() -> Result<Vec<String>, Error> {
     let mut stream = TcpStream::connect(format!("{SERVER_IP}:{SERVER_PORT}")).unwrap();
 
     // handshake
