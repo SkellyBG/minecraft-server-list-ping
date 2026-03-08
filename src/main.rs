@@ -82,7 +82,7 @@ async fn spawn_poll(ctx: poise::serenity_prelude::Context) {
         let new_players = minecraft_ping(&SERVER_ADDRESS).unwrap();
 
         for new_player in new_players.iter() {
-            if !current_players.contains(new_player) {
+            if !current_players.contains(new_player) && new_player != "Anonymous Player" {
                 let _ = channel_id
                     .say(ctx.clone(), format!("{} joined the server!", new_player))
                     .await;
@@ -90,7 +90,7 @@ async fn spawn_poll(ctx: poise::serenity_prelude::Context) {
         }
 
         for cur_player in current_players.iter() {
-            if !new_players.contains(cur_player) {
+            if !new_players.contains(cur_player) && cur_player != "Anonymous Player" {
                 let _ = channel_id
                     .say(ctx.clone(), format!("{} left the server!", cur_player))
                     .await;
