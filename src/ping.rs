@@ -1,4 +1,5 @@
 use std::{
+    collections::HashSet,
     io::{Read, Write},
     net::TcpStream,
 };
@@ -29,7 +30,7 @@ struct StatusResponsePlayer {
     name: String,
 }
 
-pub fn minecraft_ping(server_address: &str) -> Result<Vec<String>, Error> {
+pub fn minecraft_ping(server_address: &str) -> Result<HashSet<String>, Error> {
     let mut stream = TcpStream::connect(server_address).unwrap();
 
     // handshake
