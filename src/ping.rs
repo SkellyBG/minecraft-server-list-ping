@@ -29,8 +29,8 @@ struct StatusResponsePlayer {
     name: String,
 }
 
-pub fn minecraft_ping() -> Result<Vec<String>, Error> {
-    let mut stream = TcpStream::connect(format!("{SERVER_IP}:{SERVER_PORT}")).unwrap();
+pub fn minecraft_ping(server_address: &str) -> Result<Vec<String>, Error> {
+    let mut stream = TcpStream::connect(server_address).unwrap();
 
     // handshake
     let mut handshake = vec![0x00, 0x00];
