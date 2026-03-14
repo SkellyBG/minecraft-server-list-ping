@@ -77,27 +77,27 @@ async fn main() {
 
 async fn spawn_poll(ctx: poise::serenity_prelude::Context) {
     let channel_id = serenity::ChannelId::new(Args::parse().channel_id);
-    let mut current_players = minecraft_ping(&SERVER_ADDRESS).unwrap();
+    let mut current_players = minecraft_ping(&SERVER_ADDRESS).unwrap_or_default();
     loop {
-        let new_players = minecraft_ping(&SERVER_ADDRESS).unwrap();
-
-        for new_player in new_players.iter() {
-            if !current_players.contains(new_player) && new_player != "Anonymous Player" {
-                let _ = channel_id
-                    .say(ctx.clone(), format!("{} joined the server!", new_player))
-                    .await;
+        if let Ok(new_players) = minecraft_ping(&SERVER_ADDRESS) {
+            for new_player in new_players.iter() {
+                if !current_players.contains(new_player) && new_player != "Anonymous Player" {
+                    let _ = channel_id
+                        .say(ctx.clone(), format!("{} joined the server!", new_player))
+                        .await;
+                }
             }
+
+            for cur_player in current_players.iter() {
+                if !new_players.contains(cur_player) && cur_player != "Anonymous Player" {
+                    let _ = channel_id
+                        .say(ctx.clone(), format!("{} left the server!", cur_player))
+                        .await;
+                }
+            }
+            current_players = new_players;
         }
 
-        for cur_player in current_players.iter() {
-            if !new_players.contains(cur_player) && cur_player != "Anonymous Player" {
-                let _ = channel_id
-                    .say(ctx.clone(), format!("{} left the server!", cur_player))
-                    .await;
-            }
-        }
-
-        current_players = new_players;
         tokio::time::sleep(Duration::from_secs(10)).await;
     }
 }
